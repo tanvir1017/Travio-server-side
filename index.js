@@ -93,15 +93,15 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const database = client.db("TourService").collection("Tour");
+    const database = client.db("Services").collection("Travel");
 
-    app.get("/tour", async (req, res) => {
+    app.get("/travel", async (req, res) => {
       const cursor = database.find({});
-      const tour = await cursor.toArray();
-      res.send(tour);
+      const findable = await cursor.toArray();
+      res.send(findable);
     });
   } finally {
-    await client.close();
+    // await client.close();
   }
 }
 
