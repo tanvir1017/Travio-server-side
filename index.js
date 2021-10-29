@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 5000;
 require("dotenv").config();
+const ObjectId = require("mongodb").ObjectId;
 
 const tour = [
   {
@@ -93,12 +94,20 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
+    console.log("dbconnected");
     const database = client.db("Services").collection("Travel");
 
-    app.get("/travel", async (req, res) => {
+    app.get("/Travel", async (req, res) => {
       const cursor = database.find({});
       const findable = await cursor.toArray();
       res.send(findable);
+    });
+    app.get("/Travel/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log("database hitint");
+      const query = { _id: ObjectId(id) };
+      const serviceOne = await database.findOne(query);
+      res.json(serviceOne);
     });
   } finally {
     // await client.close();
