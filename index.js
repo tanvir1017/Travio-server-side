@@ -6,81 +6,6 @@ const port = process.env.PORT || 5000;
 require("dotenv").config();
 const ObjectId = require("mongodb").ObjectId;
 
-const tour = [
-  {
-    title: "Ultimate Thailand",
-    place: "Thailand",
-    price: "1350",
-    description:
-      "Thailand’s geography is certainly impressive, with every province across the country having some unique geographical feature worth exploring. However, the country’s most impressive natural feature is surely its beaches, with over 1,500 miles of coastline to choose from. Though there are a fair share of beaches that have been overrun with sun soaking tourists, there are many incredible stretches of sand that remain quiet, secluded and stunning. Some of these beaches include Freedom Beach in Phuket and Sunset Beach on the island of Koh Kradan.",
-    "Departure/Return Location": "Ko Phangan, Surat Thani 84280, Thailand",
-    "Departure Time": "Please arrive by 9:15 AM for a departure at 9:30 AM",
-    "Return Time": "Approximately 8:30 PM",
-    Included: "Accommodation, Guide, Insurance,Meals",
-    img: "https://wanderers.qodeinteractive.com/wp-content/uploads/2018/03/tour-6-featured-img-768x895.jpg",
-  },
-  {
-    title: "Ultimate Thailand",
-    place: "Thailand",
-    price: "1350",
-    description:
-      "Thailand’s geography is certainly impressive, with every province across the country having some unique geographical feature worth exploring. However, the country’s most impressive natural feature is surely its beaches, with over 1,500 miles of coastline to choose from. Though there are a fair share of beaches that have been overrun with sun soaking tourists, there are many incredible stretches of sand that remain quiet, secluded and stunning. Some of these beaches include Freedom Beach in Phuket and Sunset Beach on the island of Koh Kradan.",
-    "Departure/Return Location": "Ko Phangan, Surat Thani 84280, Thailand",
-    "Departure Time": "Please arrive by 9:15 AM for a departure at 9:30 AM",
-    "Return Time": "Approximately 8:30 PM",
-    Included: "Accommodation, Guide, Insurance,Meals",
-    img: "https://wanderers.qodeinteractive.com/wp-content/uploads/2018/03/tour-9-featured-img.jpg",
-  },
-  {
-    title: "Ultimate Thailand",
-    place: "Thailand",
-    price: "1350",
-    description:
-      "Thailand’s geography is certainly impressive, with every province across the country having some unique geographical feature worth exploring. However, the country’s most impressive natural feature is surely its beaches, with over 1,500 miles of coastline to choose from. Though there are a fair share of beaches that have been overrun with sun soaking tourists, there are many incredible stretches of sand that remain quiet, secluded and stunning. Some of these beaches include Freedom Beach in Phuket and Sunset Beach on the island of Koh Kradan.",
-    "Departure/Return Location": "Ko Phangan, Surat Thani 84280, Thailand",
-    "Departure Time": "Please arrive by 9:15 AM for a departure at 9:30 AM",
-    "Return Time": "Approximately 8:30 PM",
-    Included: "Accommodation, Guide, Insurance,Meals",
-    img: "https://wanderers.qodeinteractive.com/wp-content/uploads/2018/03/tour-8-featured-img.jpg",
-  },
-  {
-    title: "Ultimate Thailand",
-    place: "Thailand",
-    price: "1350",
-    description:
-      "Thailand’s geography is certainly impressive, with every province across the country having some unique geographical feature worth exploring. However, the country’s most impressive natural feature is surely its beaches, with over 1,500 miles of coastline to choose from. Though there are a fair share of beaches that have been overrun with sun soaking tourists, there are many incredible stretches of sand that remain quiet, secluded and stunning. Some of these beaches include Freedom Beach in Phuket and Sunset Beach on the island of Koh Kradan.",
-    "Departure/Return Location": "Ko Phangan, Surat Thani 84280, Thailand",
-    "Departure Time": "Please arrive by 9:15 AM for a departure at 9:30 AM",
-    "Return Time": "Approximately 8:30 PM",
-    Included: "Accommodation, Guide, Insurance,Meals",
-    img: "https://wanderers.qodeinteractive.com/wp-content/uploads/2018/03/tour-7-featured-img-768x895.jpg",
-  },
-  {
-    title: "Ultimate Thailand",
-    place: "Thailand",
-    price: "1350",
-    description:
-      "Thailand’s geography is certainly impressive, with every province across the country having some unique geographical feature worth exploring. However, the country’s most impressive natural feature is surely its beaches, with over 1,500 miles of coastline to choose from. Though there are a fair share of beaches that have been overrun with sun soaking tourists, there are many incredible stretches of sand that remain quiet, secluded and stunning. Some of these beaches include Freedom Beach in Phuket and Sunset Beach on the island of Koh Kradan.",
-    "Departure/Return Location": "Ko Phangan, Surat Thani 84280, Thailand",
-    "Departure Time": "Please arrive by 9:15 AM for a departure at 9:30 AM",
-    "Return Time": "Approximately 8:30 PM",
-    Included: "Accommodation, Guide, Insurance,Meals",
-    img: "https://wanderers.qodeinteractive.com/wp-content/uploads/2018/03/tour-4-featured-img.jpg",
-  },
-  {
-    title: "Ultimate Thailand",
-    place: "Thailand",
-    price: "1350",
-    description:
-      "Thailand’s geography is certainly impressive, with every province across the country having some unique geographical feature worth exploring. However, the country’s most impressive natural feature is surely its beaches, with over 1,500 miles of coastline to choose from. Though there are a fair share of beaches that have been overrun with sun soaking tourists, there are many incredible stretches of sand that remain quiet, secluded and stunning. Some of these beaches include Freedom Beach in Phuket and Sunset Beach on the island of Koh Kradan.",
-    "Departure/Return Location": "Ko Phangan, Surat Thani 84280, Thailand",
-    "Departure Time": "Please arrive by 9:15 AM for a departure at 9:30 AM",
-    "Return Time": "Approximately 8:30 PM",
-    Included: "Accommodation, Guide, Insurance,Meals",
-    img: "https://wanderers.qodeinteractive.com/wp-content/uploads/2018/03/tour-3-featured-img.jpg",
-  },
-];
-
 app.use(cors());
 app.use(express.json());
 
@@ -94,17 +19,42 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    console.log("dbconnected");
-    const database = client.db("Services").collection("Travel");
+    const dbFolder = client.db("Services");
+    const database = dbFolder.collection("Travel");
+    const database2 = dbFolder.collection("booking");
 
+    // app.getting
     app.get("/Travel", async (req, res) => {
       const cursor = database.find({});
       const findable = await cursor.toArray();
       res.send(findable);
     });
+
+    // app.post
+    app.post("/booking", async (req, res) => {
+      const book = req.body;
+      console.log("hitted");
+      const result = await database2.insertOne(book);
+      res.json(result);
+    });
+
+    // app.getting
+    app.get("/booking", async (req, res) => {
+      const cursor = database2.find({});
+      const findable = await cursor.toArray();
+      res.send(findable);
+    });
+    // app.delete
+    app.get("/booking/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await database2.findOne(query);
+      res.json(result);
+    });
+
+    // app.get
     app.get("/Travel/:id", async (req, res) => {
       const id = req.params.id;
-      console.log("database hitint");
       const query = { _id: ObjectId(id) };
       const serviceOne = await database.findOne(query);
       res.json(serviceOne);
