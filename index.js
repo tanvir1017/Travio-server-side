@@ -22,6 +22,7 @@ async function run() {
     const dbFolder = client.db("Services");
     const database = dbFolder.collection("Travel");
     const database2 = dbFolder.collection("booking");
+    const database3 = dbFolder.collection("blog");
 
     // app.getting
     app.get("/Travel", async (req, res) => {
@@ -33,9 +34,19 @@ async function run() {
     // app.post
     app.post("/booking", async (req, res) => {
       const book = req.body;
-      console.log("hitted");
       const result = await database2.insertOne(book);
       res.json(result);
+    });
+    // app.post
+    app.post("/blog", async (req, res) => {
+      const blog = req.body;
+      const result = await database3.insertOne(blog);
+      res.json(result);
+    });
+    app.get("/blog", async (req, res) => {
+      const cursor = database3.find({});
+      const findable = await cursor.toArray();
+      res.send(findable);
     });
 
     // app.getting
@@ -66,7 +77,7 @@ async function run() {
 
 run().catch(console.dir);
 
-app.get("/user", (req, res) => {
+app.get("/", (req, res) => {
   res.send("hello from server");
 });
 app.listen(port, (req, res) => {
