@@ -45,10 +45,10 @@ async function run() {
       res.send(findable);
     });
     // app.delete
-    app.get("/booking/:id", async (req, res) => {
+    app.delete("/booking/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await database2.findOne(query);
+      const result = await database2.deleteOne(query);
       res.json(result);
     });
 
