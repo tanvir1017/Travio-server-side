@@ -32,9 +32,9 @@ async function run() {
 
     // app.post
     app.post("/booking", async (req, res) => {
-      const book = req.body;
+      const book = req.body.data;
       book.status = false;
-      console.log(book);
+      book.img = req.body.img;
       const result = await database2.insertOne(book);
       res.json(result);
     });
@@ -48,6 +48,14 @@ async function run() {
       const cursor = database3.find({});
       const findable = await cursor.toArray();
       res.send(findable);
+    });
+
+    // app.get
+    app.post("/booking/email", async (req, res) => {
+      const products = await database2
+        .find({ email: req.body.email })
+        .toArray();
+      res.json(products);
     });
 
     // app.getting
