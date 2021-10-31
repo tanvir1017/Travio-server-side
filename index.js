@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.14uaf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-console.log(uri);
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -34,6 +33,8 @@ async function run() {
     // app.post
     app.post("/booking", async (req, res) => {
       const book = req.body;
+      book.status = false;
+      console.log(book);
       const result = await database2.insertOne(book);
       res.json(result);
     });
@@ -54,6 +55,18 @@ async function run() {
       const cursor = database2.find({});
       const findable = await cursor.toArray();
       res.send(findable);
+    });
+
+    // app put
+    app.put("/booking", async (req, res) => {
+      console.log(req.body);
+      const id = req.body._id;
+      const checked = req.body.checked;
+      const query = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const data = { $set: { status: checked } };
+      const result = await database2.updateOne(query, data, options);
+      res.json(result);
     });
     // app.delete
     app.delete("/booking/:id", async (req, res) => {
